@@ -13,7 +13,7 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "prod-secret-7721")
 api_key = os.environ.get("AI_API_KEY")
 if api_key:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('models/gemini-1.5-flash')
 else:
     model = None
 
