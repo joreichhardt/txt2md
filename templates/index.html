@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>txt2md</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>txt2md</h1>
+            <p>Convert your raw notes into high-quality Markdown.</p>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flashes">
+              {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="editor-grid">
+            <section class="input-section">
+                <h2>Raw Input</h2>
+                <form method="POST">
+                    <textarea name="text" placeholder="Paste your text here..." required>{{ original_text }}</textarea>
+                    <button type="submit">Convert</button>
+                </form>
+            </section>
+
+            <section class="output-section">
+                <h2>Formatted Output</h2>
+                <div class="preview">
+                    {% if converted_html %}
+                        {{ converted_html | safe }}
+                    {% else %}
+                        <p class="placeholder">Results will be displayed here.</p>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
