@@ -1,30 +1,12 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
-kind: Gateway
-metadata:
-  name: txt2md-gateway
-  namespace: default
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-spec:
-  gatewayClassName: gke-l7-global-external-managed
-  listeners:
-  - name: https
-    protocol: HTTPS
-    port: 443
-    hostname: "txt2md.hannesalbeiro.com"
-    tls:
-      mode: Terminate
-      certificateRefs:
-      - name: txt2md-cert
----
-apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   name: txt2md-route
   namespace: default
 spec:
   parentRefs:
-  - name: txt2md-gateway
+  - name: main-gateway
+    namespace: default
   hostnames:
   - "txt2md.hannesalbeiro.com"
   rules:
