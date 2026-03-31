@@ -1,0 +1,79 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: txt2md-gateway
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  gatewayClassName: gke-l7-global-external-managed
+  listeners:
+  - name: https
+    protocol: HTTPS
+    port: 443
+    hostname: "txt2md.hannesalbeiro.com"
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: txt2md-cert
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: txt2md-route
+  namespace: default
+spec:
+  parentRefs:
+  - name: txt2md-gateway
+  hostnames:
+  - "txt2md.hannesalbeiro.com"
+  rules:
+  - backendRefs:
+    - name: txt2md
+      port: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: txt2md
+  labels:
+    app: txt2md
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: txt2md
+  template:
+    metadata:
+      labels:
+        app: txt2md
+    spec:
+      containers:
+      - name: txt2md
+        image: europe-west3-docker.pkg.dev/project-84ddd43d-e408-4cb9-8cb/txt2md-repo/txt2md:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: AI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: txt2md-secrets
+              key: ai-api-key
+        - name: FLASK_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: txt2md-secrets
+              key: flask-secret-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: txt2md
+spec:
+  selector:
+    app: txt2md
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: ClusterIP
