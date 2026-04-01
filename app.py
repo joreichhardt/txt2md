@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, request, flash
+from prometheus_flask_exporter import PrometheusMetrics
 import google.generativeai as genai
 from markdown import markdown
 from dotenv import load_dotenv
@@ -8,6 +9,13 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "prod-secret-7721")
+
+metrics = PrometheusMetrics(app)
+metrics.info('app_info', 'Application info', version='1.0.5')
+
+conversion_counter = metrics.counter(
+    'txt2md_conversions_total', 'Total number of text conversions'
+)
 
 # API Configuration
 api_key = os.environ.get("AI_API_KEY")
@@ -36,6 +44,7 @@ def index():
                 response = model.generate_content(prompt)
                 markdown_content = response.text
                 converted_html = markdown(markdown_content, extensions=['extra', 'codehilite'])
+                conversion_counter.inc()
             except Exception as e:
                 flash(f"Error during processing: {str(e)}", "error")
                 
