@@ -1,3 +1,39 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: txt2md-sa
+  namespace: default
+  annotations:
+    iam.gke.io/gcp-service-account: "txt2md-app-gsa@project-84ddd43d-e408-4cb9-8cb.iam.gserviceaccount.com"
+---
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name: gcp-store
+  namespace: default
+spec:
+  provider:
+    gcpsm:
+      projectID: project-84ddd43d-e408-4cb9-8cb
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: txt2md-api-key
+  namespace: default
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: gcp-store
+    kind: SecretStore
+  target:
+    name: txt2md-secrets # This matches the Secret name expected by the Deployment
+    creationPolicy: Owner
+  data:
+  - secretKey: ai-api-key
+    remoteRef:
+      key: gemini-api-key
+---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
@@ -30,6 +66,7 @@ spec:
       labels:
         app: txt2md
     spec:
+      serviceAccountName: txt2md-sa
       containers:
       - name: txt2md
         image: europe-west3-docker.pkg.dev/project-84ddd43d-e408-4cb9-8cb/txt2md-repo/txt2md:v1.0.4
