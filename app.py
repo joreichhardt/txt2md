@@ -21,7 +21,17 @@ conversion_counter = metrics.counter(
 api_key = os.environ.get("AI_API_KEY")
 if api_key:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    system_instruction = (
+        "You are a text-to-markdown conversion specialist. You always produce "
+        "standard CommonMark/GitHub Flavored Markdown. You strictly use ATX "
+        "headings (#) and never use wiki-style syntax like '==' or '==='. "
+        "Additionally, you insert relevant and tasteful emojis at the beginning "
+        "of section headings to represent the topic."
+    )
+    model = genai.GenerativeModel(
+        model_name='gemini-2.5-flash',
+        system_instruction=system_instruction
+    )
 else:
     model = None
 
@@ -40,7 +50,12 @@ def index():
         else:
             try:
                 # Content processing logic
-                prompt = f"Convert the following text to high-quality Markdown. Use appropriate structure, headings, and formatting. Return only the markdown content:\n\n{original_text}"
+                prompt = (
+                    f"Convert the following text into high-quality standard Markdown. "
+                    f"Use ATX headings (#), standard formatting, and include relevant "
+                    f"emojis for each section heading to make the document more engaging. "
+                    f"Return ONLY the markdown content:\n\n{original_text}"
+                )
                 response = model.generate_content(prompt)
                 markdown_content = response.text
                 converted_html = markdown(markdown_content, extensions=['extra', 'codehilite'])
