@@ -26,9 +26,12 @@
         <div class="editor-grid">
             <section class="input-section">
                 <h2>Raw Input</h2>
-                <form method="POST">
+                <form id="convert-form" method="POST">
                     <textarea name="text" placeholder="Paste your text here..." required>{{ original_text }}</textarea>
-                    <button type="submit">Convert</button>
+                    <button type="submit" id="convert-btn">
+                        <span class="spinner"></span>
+                        <span class="btn-text">Convert</span>
+                    </button>
                 </form>
             </section>
 
@@ -47,5 +50,14 @@
             </section>
         </div>
     </div>
+
+    <script>
+        document.getElementById('convert-form').addEventListener('submit', function() {
+            const btn = document.getElementById('convert-btn');
+            btn.disabled = true;
+            btn.classList.add('loading');
+            btn.querySelector('.btn-text').textContent = 'Converting...';
+        });
+    </script>
 </body>
 </html>
