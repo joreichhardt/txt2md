@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "prod-secret-7721")
 
 metrics = PrometheusMetrics(app)
-metrics.info('app_info', 'Application info', version='1.1.0')
+metrics.info('app_info', 'Application info', version='1.1.1')
 
 # API Configuration
 api_key = os.environ.get("AI_API_KEY")
@@ -23,7 +23,9 @@ if api_key:
         "headings (#) and never use wiki-style syntax like '==' or '==='. "
         "Additionally, you insert relevant and tasteful emojis as Markdown "
         "shortcodes (e.g., :rocket:, :bulb:, :memo:) at the beginning of section "
-        "headings to represent the topic."
+        "headings to represent the topic. "
+        "CRITICAL: Always maintain the original language of the input text. "
+        "Do NOT translate the content."
     )
     model = genai.GenerativeModel(
         model_name='gemini-2.5-flash',
@@ -52,6 +54,7 @@ def index():
                 # Content processing logic
                 prompt = (
                     f"Convert the following text into high-quality standard Markdown. "
+                    f"Maintain the original language of the text. Do NOT translate it. "
                     f"Use ATX headings (#), standard formatting, and include relevant "
                     f"emoji shortcodes (like :smile:) for each section heading to make "
                     f"the document more engaging. Return ONLY the markdown content:\n\n"

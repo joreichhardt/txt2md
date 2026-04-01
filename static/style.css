@@ -1,16 +1,18 @@
 :root {
-    --primary-color: #3498db;
-    --secondary-color: #2c3e50;
-    --background-color: #f8f9fa;
-    --text-color: #333;
-    --border-color: #ddd;
-    --alert-error: #e74c3c;
-    --alert-warning: #f39c12;
-    --alert-info: #3498db;
+    --primary-color: #00ff00; /* Terminal Green */
+    --secondary-color: #33ff33;
+    --background-color: #121212;
+    --surface-color: #1e1e1e;
+    --text-color: #e0e0e0;
+    --border-color: #333;
+    --alert-error: #ff5555;
+    --alert-warning: #ffb86c;
+    --alert-info: #8be9fd;
+    --font-mono: "Fira Code", "Courier New", Courier, monospace;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-mono);
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
@@ -19,25 +21,31 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 2rem auto;
     padding: 0 1.5rem;
 }
 
 header {
-    text-align: center;
+    text-align: left;
     margin-bottom: 3rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
 }
 
 header h1 {
-    font-size: 2.5rem;
-    color: var(--secondary-color);
+    font-size: 2rem;
+    color: var(--primary-color);
     margin-bottom: 0.5rem;
 }
 
+header h1::before {
+    content: "> ";
+}
+
 header p {
-    color: #666;
-    font-size: 1.1rem;
+    color: #888;
+    font-size: 1rem;
 }
 
 .editor-grid {
@@ -47,29 +55,43 @@ header p {
 }
 
 section h2 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     margin-bottom: 1rem;
-    color: var(--secondary-color);
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 0.5rem;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+section h2::before {
+    content: "[ ";
+}
+section h2::after {
+    content: " ]";
 }
 
 textarea {
     width: 100%;
-    height: 400px;
+    height: 450px;
     padding: 1rem;
+    background-color: var(--surface-color);
+    color: var(--primary-color);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 4px;
     font-size: 1rem;
-    font-family: inherit;
+    font-family: var(--font-mono);
     resize: vertical;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
 }
 
 textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.markdown-output {
+    background-color: #000;
+    color: #f0f0f0;
+    margin-bottom: 2rem;
 }
 
 button {
@@ -79,35 +101,37 @@ button {
     width: 100%;
     padding: 0.75rem;
     margin-top: 1rem;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
     font-size: 1rem;
     font-weight: 600;
+    font-family: var(--font-mono);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 button:hover:not(:disabled) {
-    background-color: #2980b9;
+    background-color: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
 }
 
 button:disabled {
-    background-color: #a5ccea;
+    border-color: #444;
+    color: #444;
     cursor: not-allowed;
-    opacity: 0.8;
 }
 
 .spinner {
     display: none;
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(0, 255, 0, 0.2);
     border-radius: 50%;
-    border-top-color: #fff;
-    animation: spin 1s ease-in-out infinite;
-    margin-right: 10px;
+    border-top-color: var(--primary-color);
+    animation: spin 0.8s linear infinite;
+    margin-right: 12px;
 }
 
 @keyframes spin {
@@ -119,17 +143,17 @@ button.loading .spinner {
 }
 
 .preview {
-    background-color: white;
-    padding: 1rem;
+    background-color: var(--surface-color);
+    padding: 1.5rem;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    height: 400px;
+    border-radius: 4px;
+    height: 450px;
     overflow-y: auto;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    color: #ccc;
 }
 
 .preview .placeholder {
-    color: #999;
+    color: #555;
     font-style: italic;
     text-align: center;
     margin-top: 2rem;
@@ -141,23 +165,25 @@ button.loading .spinner {
 
 .alert {
     padding: 0.75rem 1rem;
-    border-radius: 6px;
+    border-radius: 4px;
     margin-bottom: 0.5rem;
-    font-weight: 500;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
 }
 
-.alert.error { background-color: #fadbd8; color: var(--alert-error); border: 1px solid #f5b7b1; }
-.alert.warning { background-color: #fef5e7; color: var(--alert-warning); border: 1px solid #f9e79f; }
-.alert.info { background-color: #ebf5fb; color: var(--alert-info); border: 1px solid #d6eaf8; }
+.alert.error { background-color: rgba(255, 85, 85, 0.1); color: var(--alert-error); border: 1px solid var(--alert-error); }
+.alert.warning { background-color: rgba(255, 184, 108, 0.1); color: var(--alert-warning); border: 1px solid var(--alert-warning); }
+.alert.info { background-color: rgba(139, 233, 253, 0.1); color: var(--alert-info); border: 1px solid var(--alert-info); }
 
 /* Markdown Preview Styles */
-.preview h1 { font-size: 1.5rem; margin-top: 0; }
-.preview h2 { font-size: 1.3rem; }
-.preview blockquote { border-left: 4px solid #eee; padding-left: 1rem; color: #666; margin-left: 0; }
-.preview pre { background-color: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto; }
-.preview code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; background-color: #f4f4f4; padding: 0.2rem 0.4rem; border-radius: 3px; }
+.preview h1, .preview h2, .preview h3 { color: var(--primary-color); border-bottom: none; padding-bottom: 0; }
+.preview h1 { font-size: 1.4rem; }
+.preview h2 { font-size: 1.2rem; }
+.preview blockquote { border-left: 2px solid var(--primary-color); padding-left: 1rem; color: #888; font-style: italic; margin-left: 0; }
+.preview pre { background-color: #000; padding: 1rem; border-radius: 4px; border: 1px solid #333; overflow-x: auto; }
+.preview code { font-family: var(--font-mono); background-color: #222; padding: 0.2rem 0.4rem; border-radius: 3px; color: #ff79c6; }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .editor-grid {
         grid-template-columns: 1fr;
     }
