@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>txt2md</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1.1.2">
+    <title>txt2md :: terminal</title>
+    <!-- Cache-Buster v1.1.3 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1.1.3">
 </head>
-<body>
+<body class="terminal-bg">
     <div class="container">
-        <header>
+        <header class="terminal-header">
             <h1>txt2md</h1>
-            <p>Convert your raw notes into high-quality Markdown.</p>
+            <p>System Ready. Waiting for input...</p>
         </header>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             <div class="flashes">
               {% for category, message in messages %}
-                <div class="alert {{ category }}">{{ message }}</div>
+                <div class="alert {{ category }}">> [{{ category | upper }}]: {{ message }}</div>
               {% endfor %}
             </div>
           {% endif %}
@@ -25,30 +26,34 @@
 
         <div class="editor-grid">
             <section class="input-section">
-                <h2>Raw Input</h2>
+                <h2>[ INPUT_BUFFER ]</h2>
                 <form id="convert-form" method="POST">
-                    <textarea name="text" placeholder="Paste your text here..." required>{{ original_text }}</textarea>
+                    <textarea name="text" placeholder="user@txt2md:~$ paste_your_text_here..." required>{{ original_text }}</textarea>
                     <button type="submit" id="convert-btn">
                         <span class="spinner"></span>
-                        <span class="btn-text">Convert</span>
+                        <span class="btn-text">EXECUTE CONVERSION</span>
                     </button>
                 </form>
             </section>
 
             <section class="output-section">
-                <h2>Markdown Output</h2>
-                <textarea class="markdown-output" readonly placeholder="Raw Markdown will appear here...">{{ markdown_content }}</textarea>
+                <h2>[ RAW_MARKDOWN ]</h2>
+                <textarea class="markdown-output" readonly placeholder="Waiting for process completion...">{{ markdown_content }}</textarea>
                 
-                <h2>Formatted Preview</h2>
+                <h2>[ PREVIEW_RENDER ]</h2>
                 <div class="preview">
                     {% if converted_html %}
                         {{ converted_html | safe }}
                     {% else %}
-                        <p class="placeholder">Results will be displayed here.</p>
+                        <p class="placeholder">_ NO_DATA_AVAILABLE</p>
                     {% endif %}
                 </div>
             </section>
         </div>
+        
+        <footer class="terminal-footer">
+            <p>v1.1.3-stable | connection: encrypted | status: online</p>
+        </footer>
     </div>
 
     <script>
@@ -56,7 +61,7 @@
             const btn = document.getElementById('convert-btn');
             btn.disabled = true;
             btn.classList.add('loading');
-            btn.querySelector('.btn-text').textContent = 'Converting...';
+            btn.querySelector('.btn-text').textContent = 'PROCESSING...';
         });
     </script>
 </body>
