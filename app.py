@@ -11,7 +11,8 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "prod-secret-7721")
 
 metrics = PrometheusMetrics(app)
-metrics.info('app_info', 'Application info', version='1.1.1')
+metrics.info('app_info', 'Application info', version='1.1.2')
+
 
 # API Configuration
 api_key = os.environ.get("AI_API_KEY")
