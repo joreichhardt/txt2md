@@ -44,8 +44,8 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-  - name: main-gateway
-    namespace: default
+  - name: external-http
+    namespace: kube-system
   hostnames:
   - "txt2md.hannesalbeiro.com"
   rules:
