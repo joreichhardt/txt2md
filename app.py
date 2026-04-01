@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "prod-secret-7721")
 
 metrics = PrometheusMetrics(app)
-metrics.info('app_info', 'Application info', version='1.0.5')
+metrics.info('app_info', 'Application info', version='1.0.6')
 
 conversion_counter = metrics.counter(
     'txt2md_conversions_total', 'Total number of text conversions'
