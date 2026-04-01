@@ -49,7 +49,7 @@ header.terminal-header h1 {
 }
 
 header.terminal-header h1::before {
-    content: "root@txt2md:~/ ";
+    content: "hannesalbeiro@txt2md:~/ ";
     font-size: 1.2rem;
     vertical-align: middle;
 }
