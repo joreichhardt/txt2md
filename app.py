@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "prod-secret-7721")
 
 metrics = PrometheusMetrics(app)
-metrics.info('app_info', 'Application info', version='1.0.6')
+metrics.info('app_info', 'Application info', version='1.0.8')
 
 conversion_counter = metrics.counter(
     'txt2md_conversions_total', 'Total number of text conversions'
@@ -38,6 +38,7 @@ else:
 @app.route("/", methods=["GET", "POST"])
 def index():
     converted_html = None
+    markdown_content = ""
     original_text = ""
     
     if request.method == "POST":
@@ -63,7 +64,12 @@ def index():
             except Exception as e:
                 flash(f"Error during processing: {str(e)}", "error")
                 
-    return render_template("index.html", original_text=original_text, converted_html=converted_html)
+    return render_template(
+        "index.html", 
+        original_text=original_text, 
+        converted_html=converted_html,
+        markdown_content=markdown_content
+    )
 
 if __name__ == "__main__":
     debug_mode = os.environ.get("FLASK_DEBUG", "False").lower() == "true"

@@ -33,7 +33,10 @@
             </section>
 
             <section class="output-section">
-                <h2>Formatted Output</h2>
+                <h2>Markdown Output</h2>
+                <textarea class="markdown-output" readonly placeholder="Raw Markdown will appear here...">{{ markdown_content }}</textarea>
+                
+                <h2>Formatted Preview</h2>
                 <div class="preview">
                     {% if converted_html %}
                         {{ converted_html | safe }}
