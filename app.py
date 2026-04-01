@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "prod-secret-7721")
 
 metrics = PrometheusMetrics(app)
-metrics.info('app_info', 'Application info', version='1.0.9')
+metrics.info('app_info', 'Application info', version='1.1.0')
 
 # API Configuration
 api_key = os.environ.get("AI_API_KEY")
@@ -59,7 +59,14 @@ def index():
                 )
                 response = model.generate_content(prompt)
                 markdown_content = response.text
-                converted_html = markdown(markdown_content, extensions=['extra', 'codehilite'])
+                
+                # Render HTML with emoji support
+                extensions = [
+                    'extra', 
+                    'codehilite', 
+                    'pymdownx.emoji'
+                ]
+                converted_html = markdown(markdown_content, extensions=extensions)
             except Exception as e:
                 flash(f"Error during processing: {str(e)}", "error")
                 
